@@ -1,5 +1,5 @@
-// /app/customer/books/[id]/page.jsx
 'use client';
+// /app/customer/books/[id]/page.jsx
 import { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -83,17 +83,20 @@ export default function BookDetails() {
 }
 
 // /app/customer/books/[id]/BookDetailsSearchParams.jsx
-'use client';
-import { useSearchParams } from 'next/navigation';
+// This file should be split into its own file: BookDetailsSearchParams.jsx
+// Move the following code to /app/customer/books/[id]/BookDetailsSearchParams.jsx
 
-export function BookDetailsSearchParams() {
-  const searchParams = useSearchParams();
-  // Example: read a query param called "ref"
-  const ref = searchParams.get('ref');
+// 'use client';
+// import { useSearchParams } from 'next/navigation';
 
-  return (
-    <div className="mt-4 text-sm text-gray-500">
-      {ref && <span>Referred by: {ref}</span>}
-    </div>
-  );
-}
+// export function BookDetailsSearchParams() {
+//   const searchParams = useSearchParams();
+//   // Example: read a query param called "ref"
+//   const ref = searchParams.get('ref');
+
+//   return (
+//     <div className="mt-4 text-sm text-gray-500">
+//       {ref && <span>Referred by: {ref}</span>}
+//     </div>
+//   );
+// }
