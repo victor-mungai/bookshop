@@ -1,7 +1,18 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+
+// Child component that uses useSearchParams
+import { useSearchParams } from 'next/navigation';
+
+function InvoiceSearchParams() {
+  const searchParams = useSearchParams();
+  // Example usage: get a param (not used in parent, but for demonstration)
+  const someParam = searchParams.get('someParam');
+  // You can use this param as needed, or just render nothing if not needed
+  return null;
+}
 
 export default function InvoicePage() {
   const [order, setOrder] = useState(null);
@@ -34,7 +45,7 @@ export default function InvoicePage() {
     const canvas = await html2canvas(input, {
       backgroundColor: '#ffffff',
       useCORS: true,
-      scale: 2, // higher quality
+      scale: 2,
       allowTaint: false,
     });
     const imgData = canvas.toDataURL('image/png');
@@ -58,6 +69,10 @@ export default function InvoicePage() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#ffffff', padding: '2rem 1rem' }}>
+      {/* Suspense boundary for child */}
+      <Suspense fallback={null}>
+        <InvoiceSearchParams />
+      </Suspense>
       <div
         ref={invoiceRef}
         style={{

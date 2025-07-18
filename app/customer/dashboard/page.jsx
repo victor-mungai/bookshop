@@ -1,8 +1,19 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CartIcon from '../../components/CartIcon';
+
+// Child component that uses useSearchParams
+function BookSearchParamsInfo() {
+  // Dynamically import useSearchParams to avoid SSR issues
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+  // Example: get a query param (not used in this code, but you can expand)
+  const filter = searchParams.get('filter');
+  // Render nothing or some info
+  return null;
+}
 
 export default function BooksPage() {
   const router = useRouter();
@@ -54,6 +65,11 @@ export default function BooksPage() {
         </div>
         <CartIcon />
       </div>
+
+      {/* Suspense boundary for child component using useSearchParams */}
+      <Suspense fallback={null}>
+        <BookSearchParamsInfo />
+      </Suspense>
 
       {error && <p className="text-center text-red-600">{error}</p>}
 

@@ -1,7 +1,24 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import CartIcon from '../../components/CartIcon'; // ✅ Import CartIcon
+import CartIcon from '../../components/CartIcon';
+
+// Child component that uses useSearchParams
+function StationerySearchParams() {
+  // Import here to avoid "use client" issues
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+
+  // Example usage: get a query param (customize as needed)
+  const filter = searchParams.get('filter');
+
+  // Render nothing or something based on your needs
+  return filter ? (
+    <div className="mb-4 text-center text-sm text-gray-600">
+      Filter: <span className="font-semibold">{filter}</span>
+    </div>
+  ) : null;
+}
 
 export default function StationeryPage() {
   const router = useRouter();
@@ -81,6 +98,11 @@ export default function StationeryPage() {
           📚 Books
         </button>
       </div>
+
+      {/* Suspense boundary for search params */}
+      <Suspense fallback={null}>
+        <StationerySearchParams />
+      </Suspense>
 
       {/* Title */}
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">🖋️ Stationery</h1>

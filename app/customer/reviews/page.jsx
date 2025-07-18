@@ -1,6 +1,29 @@
 'use client';
-import { useEffect, useState } from 'react';
-// Removed useSearchParams import if it was present
+import { useEffect, useState, Suspense } from 'react';
+
+// Child component that uses useSearchParams
+function ReviewQueryInfo() {
+  // Dynamically import useSearchParams to avoid SSR issues
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+  const queryReview = searchParams.get('review');
+  const queryRating = searchParams.get('rating');
+
+  return (
+    <div className="mb-4 text-sm text-gray-600">
+      {queryReview && (
+        <div>
+          <strong>Prefilled Review:</strong> {queryReview}
+        </div>
+      )}
+      {queryRating && (
+        <div>
+          <strong>Prefilled Rating:</strong> {queryRating}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ReviewsPage() {
   const [review, setReview] = useState('');
@@ -60,6 +83,11 @@ export default function ReviewsPage() {
         <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
           ✍️ Leave a Review
         </h1>
+
+        {/* Suspense boundary for child component */}
+        <Suspense fallback={null}>
+          <ReviewQueryInfo />
+        </Suspense>
 
         <textarea
           value={review}

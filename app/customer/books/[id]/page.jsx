@@ -1,7 +1,10 @@
 // /app/customer/books/[id]/page.jsx
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+
+// Child component that uses useSearchParams
+import { BookDetailsSearchParams } from './BookDetailsSearchParams';
 
 export default function BookDetails() {
   const { id } = useParams();
@@ -70,6 +73,27 @@ export default function BookDetails() {
           Add to Cart
         </button>
       </div>
+
+      {/* Suspense boundary for child component */}
+      <Suspense fallback={<div>Loading search params...</div>}>
+        <BookDetailsSearchParams />
+      </Suspense>
+    </div>
+  );
+}
+
+// /app/customer/books/[id]/BookDetailsSearchParams.jsx
+'use client';
+import { useSearchParams } from 'next/navigation';
+
+export function BookDetailsSearchParams() {
+  const searchParams = useSearchParams();
+  // Example: read a query param called "ref"
+  const ref = searchParams.get('ref');
+
+  return (
+    <div className="mt-4 text-sm text-gray-500">
+      {ref && <span>Referred by: {ref}</span>}
     </div>
   );
 }

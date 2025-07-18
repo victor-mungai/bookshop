@@ -1,6 +1,21 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Child component that uses useSearchParams
+function CartQueryParams() {
+  // Dynamically import useSearchParams to avoid SSR issues
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+
+  // Example usage: get a query param (not used in parent, but can be extended)
+  const ref = searchParams.get('ref');
+
+  // You can display or use the param as needed
+  return ref ? (
+    <div className="mb-2 text-xs text-blue-600">Referral: {ref}</div>
+  ) : null;
+}
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
@@ -88,6 +103,11 @@ export default function CartPage() {
   return (
     <div className="p-6 max-w-2xl text-gray-600 mx-auto min-h-screen bg-gray-100">
       <h1 className="text-2xl text-gray-600 font-bold mb-4">🛒 Your Cart</h1>
+
+      {/* Suspense boundary for child component */}
+      <Suspense fallback={null}>
+        <CartQueryParams />
+      </Suspense>
 
       {cart.length === 0 ? (
         <p className="text-gray-600">No items in cart.</p>

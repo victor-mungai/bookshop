@@ -1,7 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Child component that uses useSearchParams
+function ProfileQueryInfo() {
+  // Import here to avoid "use client" warning in parent
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+  // Example: get a query param (e.g., ?ref=abc)
+  const ref = searchParams.get('ref');
+
+  if (!ref) return null;
+  return (
+    <div className="mb-4 p-2 bg-blue-50 text-blue-700 rounded">
+      Referral code: <span className="font-mono">{ref}</span>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -31,7 +47,6 @@ export default function ProfilePage() {
           });
           setForm({ username: user.username, email: user.email });
 
-          // Optionally sync name in localStorage
           localStorage.setItem('customerName', user.username);
         } else {
           router.push('/customer/login');
@@ -70,7 +85,7 @@ export default function ProfilePage() {
       const data = await res.json();
       if (data.success) {
         setProfile({ ...profile, ...form });
-        localStorage.setItem('customerName', form.username); // Sync name
+        localStorage.setItem('customerName', form.username);
         setEditing(false);
       } else {
         alert(data.message || 'Update failed');
@@ -91,6 +106,9 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-100 p-6 text-black">
       <div className="max-w-xl mx-auto bg-white shadow p-6 rounded">
+        <Suspense fallback={null}>
+          <ProfileQueryInfo />
+        </Suspense>
         <div className="flex items-center mb-6 gap-4">
           <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center text-white text-2xl">
             👤

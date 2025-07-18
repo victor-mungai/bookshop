@@ -1,16 +1,29 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+// --- Child component using useSearchParams ---
+import { useSearchParams } from 'next/navigation';
+
+function LoginQueryMessage() {
+  const searchParams = useSearchParams();
+  const msg = searchParams.get('msg');
+  if (!msg) return null;
+  return (
+    <div className="text-green-600 text-sm text-center mb-2">
+      {msg}
+    </div>
+  );
+}
+
+// --- Parent component ---
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const API_BASE = "http://127.0.0.1/bookshop/api";
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,17 +49,14 @@ export default function LoginPage() {
 
       try {
         const data = JSON.parse(text);
-        console.log("Login response:", data);
 
         if (data.success) {
-          // ✅ Clear old data
           localStorage.removeItem("customerId");
           localStorage.removeItem("customerName");
           localStorage.removeItem("sharedCart");
           localStorage.removeItem("lastOrderId");
 
-          // ✅ Save new session info
-          localStorage.setItem("customerId", data.userId); // or data.customer_id
+          localStorage.setItem("customerId", data.userId);
           if (data.name) {
             localStorage.setItem("customerName", data.name);
           }
@@ -56,11 +66,9 @@ export default function LoginPage() {
           setError(data.message || "Invalid email or password");
         }
       } catch (jsonErr) {
-        console.error("Server returned non-JSON:", text);
         setError("Server error. Not returning JSON.");
       }
     } catch (err) {
-      console.error("Login error:", err);
       setError("Network or server error. Please try again.");
     } finally {
       setLoading(false);
@@ -81,6 +89,11 @@ export default function LoginPage() {
         className="z-10 bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
       >
         <h2 className="text-2xl text-gray-600 font-bold text-center">Customer Login</h2>
+
+        {/* Suspense boundary for child */}
+        <Suspense fallback={null}>
+          <LoginQueryMessage />
+        </Suspense>
 
         <input
           type="email"

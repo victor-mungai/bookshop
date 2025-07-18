@@ -2,13 +2,16 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import CartIcon from '../../components/CartIcon';
 
-export default function HomePage() {
+// Child component that uses useSearchParams
+function SearchBar() {
+  'use client';
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
   const router = useRouter();
-  const [query, setQuery] = useState('');
-  const [customerName, setCustomerName] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -16,6 +19,29 @@ export default function HomePage() {
       router.push(`/customer/search?q=${encodeURIComponent(query.trim())}`);
     }
   };
+
+  return (
+    <form onSubmit={handleSearch} className="flex justify-center mt-4">
+      <input
+        type="text"
+        placeholder="Search for books or stationery..."
+        className="w-full max-w-md px-4 py-2 rounded-l-lg text-black"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <button
+        type="submit"
+        className="bg-yellow-400 text-black px-6 py-2 rounded-r-lg font-semibold hover:bg-yellow-500"
+      >
+        Search
+      </button>
+    </form>
+  );
+}
+
+export default function HomePage() {
+  const router = useRouter();
+  const [customerName, setCustomerName] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -90,21 +116,9 @@ export default function HomePage() {
             </p>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="flex justify-center mt-4">
-              <input
-                type="text"
-                placeholder="Search for books or stationery..."
-                className="w-full max-w-md px-4 py-2 rounded-l-lg text-black"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="bg-yellow-400 text-black px-6 py-2 rounded-r-lg font-semibold hover:bg-yellow-500"
-              >
-                Search
-              </button>
-            </form>
+            <Suspense fallback={null}>
+              <SearchBar />
+            </Suspense>
 
             {/* Navigation Buttons */}
             <div className="flex justify-center gap-4 mt-6">

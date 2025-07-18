@@ -1,8 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Child component that uses useSearchParams
+function RegisterQueryMessage() {
+  // Import here to avoid "use client" warning in parent
+  const { useSearchParams } = require('next/navigation');
+  const searchParams = useSearchParams();
+  const ref = searchParams.get('ref');
+  if (!ref) return null;
+  return (
+    <div className="bg-blue-100 text-blue-700 px-4 py-2 mb-4 rounded">
+      You were referred by: <span className="font-semibold">{ref}</span>
+    </div>
+  );
+}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -57,13 +71,11 @@ export default function RegisterPage() {
       console.log(data);
 
       if (data.success) {
-        // ✅ Clear any previous session
         localStorage.removeItem("customerId");
         localStorage.removeItem("customerName");
         localStorage.removeItem("sharedCart");
         localStorage.removeItem("lastOrderId");
 
-        // ✅ Save new session
         localStorage.setItem("customerId", data.userId || data.customer_id);
         localStorage.setItem("customerName", data.username || formData.username);
 
@@ -94,6 +106,9 @@ export default function RegisterPage() {
       <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
 
       <div className="bg-white bg-opacity-90 rounded-xl shadow-xl p-8 w-full max-w-md z-10">
+        <Suspense fallback={null}>
+          <RegisterQueryMessage />
+        </Suspense>
         {success ? (
           <div className="text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center">
