@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+// Removed useSearchParams import if it was present
 
 export default function ReviewsPage() {
   const [review, setReview] = useState('');

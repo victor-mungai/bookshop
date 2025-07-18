@@ -3,9 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-function ResetPasswordForm() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+function ResetPasswordFormInner({ token }) {
   const router = useRouter();
 
   const [password, setPassword] = useState('');
@@ -100,6 +98,12 @@ function ResetPasswordForm() {
       {message && <p className="text-sm text-center text-red-600">{message}</p>}
     </form>
   );
+}
+
+function ResetPasswordForm() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
+  return <ResetPasswordFormInner token={token} />;
 }
 
 export default function ResetPasswordPage() {
