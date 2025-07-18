@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
+
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   const router = useRouter();
@@ -61,7 +62,6 @@ export default function ResetPasswordPage() {
     <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-20 space-y-4 bg-white p-6 rounded shadow">
       <h2 className="text-xl font-bold">🔐 Reset Password</h2>
 
-      {/* Password input with toggle */}
       <div className="relative">
         <input
           type={showPassword ? 'text' : 'password'}
@@ -79,7 +79,6 @@ export default function ResetPasswordPage() {
         </span>
       </div>
 
-      {/* Confirm input with toggle */}
       <div className="relative">
         <input
           type={showConfirm ? 'text' : 'password'}
@@ -102,3 +101,12 @@ export default function ResetPasswordPage() {
     </form>
   );
 }
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<p className="text-center mt-10">⏳ Loading reset form...</p>}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
