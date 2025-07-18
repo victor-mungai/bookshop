@@ -100,7 +100,8 @@ function ResetPasswordFormInner({ token }) {
   );
 }
 
-function ResetPasswordForm() {
+// Child component that uses useSearchParams and renders ResetPasswordFormInner
+function ResetPasswordFormWithToken() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   return <ResetPasswordFormInner token={token} />;
@@ -109,8 +110,7 @@ function ResetPasswordForm() {
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={<p className="text-center mt-10">⏳ Loading reset form...</p>}>
-      <ResetPasswordForm />
+      <ResetPasswordFormWithToken />
     </Suspense>
   );
 }
-
