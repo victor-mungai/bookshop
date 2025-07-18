@@ -1,19 +1,19 @@
-'use client';
 // /app/customer/books/[id]/page.jsx
-import { useEffect, useState, Suspense } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-// Child component that uses useSearchParams
-import { BookDetailsSearchParams } from './BookDetailsSearchParams';
-
 export default function BookDetails() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id;
   const router = useRouter();
   const [book, setBook] = useState(null);
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
+    if (!id) return;
+
     fetch(`http://localhost/bookshop/api/books/show.php?id=${id}`)
       .then(res => res.json())
       .then(data => {
@@ -27,6 +27,8 @@ export default function BookDetails() {
   }, [id]);
 
   const addToCart = () => {
+    if (!book) return;
+
     const cart = JSON.parse(localStorage.getItem('sharedCart')) || [];
     const index = cart.findIndex(item => item.type === 'book' && item.id === book.book_id);
 
@@ -73,30 +75,7 @@ export default function BookDetails() {
           Add to Cart
         </button>
       </div>
-
-      {/* Suspense boundary for child component */}
-      <Suspense fallback={<div>Loading search params...</div>}>
-        <BookDetailsSearchParams />
-      </Suspense>
     </div>
   );
 }
 
-// /app/customer/books/[id]/BookDetailsSearchParams.jsx
-// This file should be split into its own file: BookDetailsSearchParams.jsx
-// Move the following code to /app/customer/books/[id]/BookDetailsSearchParams.jsx
-
-// 'use client';
-// import { useSearchParams } from 'next/navigation';
-
-// export function BookDetailsSearchParams() {
-//   const searchParams = useSearchParams();
-//   // Example: read a query param called "ref"
-//   const ref = searchParams.get('ref');
-
-//   return (
-//     <div className="mt-4 text-sm text-gray-500">
-//       {ref && <span>Referred by: {ref}</span>}
-//     </div>
-//   );
-// }
