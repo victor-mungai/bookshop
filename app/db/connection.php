@@ -3,8 +3,8 @@
 
 $host = "localhost"; // or 127.0.0.1
 $dbname = "bookshop"; // change to your DB name
-$username = "root";   // default for XAMPP
-$password = "";       // default for XAMPP (no password)
+$username = "sarabobo";   // default for XAMPP
+$password = "1234";       // default for XAMPP (no password)
 
 try {
     $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
