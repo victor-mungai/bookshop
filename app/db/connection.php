@@ -1,9 +1,9 @@
 <?php
 // db/connection.php
 
-$host = "localhost"; // or 127.0.0.1
+$host = "mysql"; // or 127.0.0.1
 $dbname = "bookshop"; // change to your DB name
-$username = "sarabobo";   // default for XAMPP
+$username = "root";   // default for XAMPP
 $password = "1234";       // default for XAMPP (no password)
 
 try {
