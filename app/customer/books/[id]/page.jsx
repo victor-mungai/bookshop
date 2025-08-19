@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 export async function generateStaticParams() {
   try {
     // Fetch all book IDs from your API
-    const response = await fetch('http://localhost/bookshop/api/books/show.php');
+    const response = await fetch('http://apache-php/bookshop/api/books/show.php');
     const data = await response.json();
     
     if (data.success) {
@@ -33,7 +33,7 @@ export default function BookDetails() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost/bookshop/api/books/show.php?id=${id}`)
+    fetch(`http://apache-php/bookshop/api/books/show.php?id=${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
