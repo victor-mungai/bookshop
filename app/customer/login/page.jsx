@@ -39,7 +39,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`apache-php/bookshop/customer/login.php`, {
+      const res = await fetch(`http://apache-php/bookshop/api/customer/login.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
