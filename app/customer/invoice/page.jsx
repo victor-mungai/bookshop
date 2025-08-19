@@ -27,7 +27,7 @@ export default function InvoicePage() {
       return;
     }
 
-    fetch(`http://localhost/bookshop/api/invoice.php?order_id=${orderId}`)
+    fetch(`http://apache-php/bookshop/api/invoice.php?order_id=${orderId}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
