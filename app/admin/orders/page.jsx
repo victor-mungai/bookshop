@@ -7,7 +7,7 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch('http://localhost/bookshop/api/admin/order_items.php');
+        const res = await fetch('http://apache-php/bookshop/api/admin/order_items.php');
         const data = await res.json();
         if (data.success) {
           setOrders(data.orders);
