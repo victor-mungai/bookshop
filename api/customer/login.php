@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // DB connection
-$host = 'localhost';
+$host = 'mysql';
 $user = 'root';
 $pass = '';
 $db = 'bookshop';
