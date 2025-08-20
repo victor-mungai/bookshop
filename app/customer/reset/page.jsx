@@ -21,7 +21,7 @@ function ResetPasswordFormInner({ token }) {
       return;
     }
 
-    fetch(`http://apache-php/bookshop/api/customer/verify_token.php?token=${token}`)
+    fetch(`http://localhost/bookshop/api/customer/verify_token.php?token=${token}`)
       .then(res => res.json())
       .then(data => {
         setValid(data.success);
@@ -38,7 +38,7 @@ function ResetPasswordFormInner({ token }) {
       return;
     }
 
-    const res = await fetch('http://apache-php/bookshop/api/customer/reset_password.php', {
+    const res = await fetch('http://localhost/bookshop/api/customer/reset_password.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, password }),
