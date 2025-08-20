@@ -13,8 +13,7 @@ try {
         $password,
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-            PDO::MYSQL_ATTR_SSL_CA => null 
+            PDO::MYSQL_ATTR_SSL_MODE => PDO::MYSQL_SSL_MODE_DISABLED
         ]
     );
 } catch (PDOException $e) {
@@ -24,4 +23,3 @@ try {
     ]);
     exit;
 }
-
