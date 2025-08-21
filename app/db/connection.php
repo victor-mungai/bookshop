@@ -1,10 +1,10 @@
 <?php
 // db/connection.php
 
-$host = "mysql"; 
+$host = "mysql";
 $dbname = "bookshop";
 $username = "root";
-$password = "";
+$password = "1234";
 
 try {
     $db = new PDO(
@@ -13,7 +13,8 @@ try {
         $password,
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_SSL_MODE => PDO::MYSQL_SSL_MODE_DISABLED
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+            PDO::MYSQL_ATTR_SSL_CA => null
         ]
     );
 } catch (PDOException $e) {
