@@ -4,7 +4,7 @@
 $host = "mysql"; 
 $dbname = "bookshop";
 $username = "root";
-$password = "1234";
+$password = "";
 
 try {
     $db = new PDO(
