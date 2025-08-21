@@ -3,8 +3,8 @@
 
 $host = "mysql"; 
 $dbname = "bookshop";
-$username = "root";
-$password = "";
+$username = "sarabobo";
+$password = "sarabobo";
 
 try {
     $db = new PDO(
