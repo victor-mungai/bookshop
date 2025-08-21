@@ -50,7 +50,7 @@ export default function ReviewsPage() {
     }
 
     try {
-      const res = await fetch('http://localhost/bookshop/api/customer/add_review.php', {
+      const res = await fetch('http://process.env.server/bookshop/api/customer/add_review.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_id: customerId, review, rating }),
