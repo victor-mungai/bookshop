@@ -27,7 +27,7 @@ export default function StationeryPage() {
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch('http://localhost/bookshop/api/stationery/index.php')
+    fetch('http://process.env.server/bookshop/api/stationery/index.php')
       .then(res => res.json())
       .then(data => {
         if (data.success) setItems(data.items);
