@@ -49,7 +49,7 @@ export default function HomePage() {
       if (!customerId) return;
 
       try {
-        const res = await fetch(`http://process.env.server/bookshop/api/customer/profile.php?id=${customerId}`);
+        const res = await fetch(`/bookshop/api/customer/profile.php?id=${customerId}`);
         const data = await res.json();
         if (data.success && data.data) {
           setCustomerName(data.data.username);
