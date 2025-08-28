@@ -16,7 +16,7 @@ function SearchResultsContent() {
       if (!query) return;
       setLoading(true);
       try {
-        const res = await fetch(`http://process.env.server/bookshop/api/search.php?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`/bookshop/api/search.php?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         setResults(data);
       } catch (err) {
