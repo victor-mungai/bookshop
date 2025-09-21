@@ -1,9 +1,11 @@
 FROM node:alpine3.21 AS build-home
 RUN apk add --no-cache git
 
-WORKDIR bookshop
-COPY . .
-RUN npm install && npm run build
+WORKDIR /bookshop
+COPY ../package*.json ./
+RUN npm install 
+COPY .. .
+RUN npm run build
 
 
 FROM node:alpine3.21
