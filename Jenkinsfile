@@ -8,7 +8,10 @@ pipeline{
         stage("Fetch code"){
             steps{
                 echo "========executing FETCH CODE========"
-                git branch: 'main', url: 'https://github.com/victor-mungai/sarabobo.git'
+                withCredentials([usernamePassword(credentialsId: 'git-pat', passwordVariable: 'GIT_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
+                    def repoUrl = "https://${GIT_USERNAME}:${GIT_PAT}@github.com/victor-mungai/sarabobo.git"
+                    git url: repoUrl, branch: 'main'
+                    }
             }
             post{
                 always{
