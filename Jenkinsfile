@@ -144,7 +144,7 @@ stage("BUILD APACHE IMAGE"){
                 //This is to avoid disk space issues on the docker host
             }
         
-    }
+    } 
 
 }
 
