@@ -147,4 +147,4 @@ stage("BUILD APACHE IMAGE"){
     } 
 
 }
-
+}
