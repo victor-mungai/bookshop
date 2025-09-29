@@ -1,9 +1,7 @@
 pipeline{
 
         agent any
-        tools{
-            nodejs "node"
-        }
+        
         environment{
             dockerRegistry = "https://index.docker.io/v1/"
         }
