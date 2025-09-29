@@ -1,148 +1,99 @@
-pipeline{
+pipeline {
+    agent any
 
-        agent any
-        
-        environment{
-            dockerRegistry = "https://index.docker.io/v1/"
-        }
-    stages{
-        stage("Fetch code"){
-            steps{
-               
+    environment {
+        dockerRegistry = 'docker.io'
+        FRONTEND_IMAGE = "victormungai/sarabobo"
+        PROXY_IMAGE = "victormungai/sarabobo"
+        DB_IMAGE = "victormungai/sarabobo"
+        APACHE_IMAGE = "victormungai/sarabobo"
+    }
+
+    stages {
+        stage("Fetch code") {
+            steps {
                 git branch: 'main', url: 'https://github.com/victor-mungai/sarabobo.git', credentialsId: 'git-pat'
             }
-            
-        }
-        stage("BUILD FRONTEND IMAGE"){
-            steps{
-                dir("frontend"){
-                    script{
-                        dockerImage = docker.build("victormungai/sarabobo:$BUILD_NUMBER", "-f Dockerfile .")
-                    }
-                }
-            }
-            
         }
 
-        stage("PUSH FRONTEND IMAGE TO DOCKER HUB"){
-            steps{
-
-
-
+        stage("Build & Push Frontend Image") {
+            steps {
                 
-                dir("frontend"){
-                    script{
+                    script {
+                        def dockerImage = docker.build("${FRONTEND_IMAGE}:frontend-${BUILD_NUMBER}", "-f frontend/Dockerfile .")
                         docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
-                            dockerImage.push('latest')
-                            dockerImage.push("$BUILD_NUMBER")
+                            dockerImage.push("${BUILD_NUMBER}")
+                            dockerImage.push("latest")
                         }
-                    } 
-                }
-            }
-        
-        }
-        stage("BUILD PROXY IMAGE"){
-            steps{
-                
-                when{
-                   changeset "proxy/*"
-                }
-                dir("proxy"){
-                    script{
-                        dockerImage = docker.build("victormungai/sarabobo-proxy:$BUILD_NUMBER", "-f Dockerfile .")
                     }
-                }
-            }
-            
-        }
-        stage("PUSH PROXY IMAGE TO DOCKER HUB"){
-            steps{
                 
-                when{
-                   changeset "proxy/*"  
-                   //I'm using this to reduce unnecessary builds and pushes to docker hub if there are no changes in the proxy folder hence lower pipeline run times
-                }
-                dir("proxy"){
-                    script{
-                        docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
-                            dockerImage.push('latest')
-                            dockerImage.push("$BUILD_NUMBER")
-                        }
-                    } 
+            }
+        }
+
+        stage("Build & Push Proxy Image") {
+            when {
+                anyOf {
+                    changeset "proxy/**"
+                    expression { return env.CHANGE_ID == null && env.BUILD_NUMBER == '1' } 
                 }
             }
+            steps {
+                
+                    script {
+                        def dockerImage = docker.build("${PROXY_IMAGE}:proxy-${BUILD_NUMBER}", "-f proxy/Dockerfile .")
+                        docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
+                            dockerImage.push("${BUILD_NUMBER}")
+                            dockerImage.push("latest")
+                        }
+                    }
+                
+            }
+        }
+
+        stage("Build & Push DB Image") {
+            when {
+                anyOf {
+                    changeset "db/**"
+                    expression { return env.CHANGE_ID == null && env.BUILD_NUMBER == '1' } 
+                }
+            }
+            steps {
+                
+                    script {
+                        def dockerImage = docker.build("${DB_IMAGE}:db-${BUILD_NUMBER}", "-f db/Dockerfile .")
+                        docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
+                            dockerImage.push("${BUILD_NUMBER}")
+                            dockerImage.push("latest")
+                        }
+                    }
+                
+            }
+        }
+
+        stage("Build & Push Apache Image") {
+            when {
+                anyOf {
+                    changeset "apache/**"
+                    expression { return env.CHANGE_ID == null && env.BUILD_NUMBER == '1' } 
+                }
+            }
+            steps {
+              
+                    script {
+                        def dockerImage = docker.build("${APACHE_IMAGE}:apache-${BUILD_NUMBER}", " -f apache/Dockerfile .")
+                        docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
+                            dockerImage.push("${BUILD_NUMBER}")
+                            dockerImage.push("latest")
+                        }
+                    }
+                
+            }
+        }
+
+        stage("Cleanup Unused Images") {
+            steps {
+                sh 'docker image prune -a -f' 
+            }
+        }
     }
-        stage("BUILD DB IMAGE"){
-            steps{
-                
-                when{
-                   changeset "db/*"
-                }
-                dir("db"){
-                    script{
-                        dockerImage = docker.build("victormungai/sarabobo-db:$BUILD_NUMBER", "-f Dockerfile .")
-                    }
-                }
-            }
-            
-        }
-        stage("PUSH DB IMAGE TO DOCKER HUB"){
-            steps{
-                
-                when{
-                   changeset "db/*"
-                }
-                dir("db"){
-                    script{
-                        docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
-                            dockerImage.push('latest')
-                            dockerImage.push("$BUILD_NUMBER")
-                        }
-                    } 
-                }
-            }
-    
-}
-
-stage("BUILD APACHE IMAGE"){
-            steps{
-                
-                when{
-                   changeset "apache/*"
-                }
-                dir("apache"){
-                    script{
-                        dockerImage = docker.build("victormungai/sarabobo-apache:$BUILD_NUMBER", "-f Dockerfile .")
-                    }
-                }
-            }
-            
-        }
-        stage("PUSH APACHE IMAGE TO DOCKER HUB"){
-            steps{
-                
-                when{
-                   changeset "apache/*"
-                }
-                dir("apache"){
-                    script{
-                        docker.withRegistry(dockerRegistry, 'dockerhub-credentials') {
-                            dockerImage.push('latest')
-                            dockerImage.push("$BUILD_NUMBER")
-                        }
-                    } 
-                }
-            }
-    
-}
-
-        stage("Cleanup Unused Images"){
-            steps{
-                sh 'docker rmi -f $(docker images -a -q)'  
-                //This is to avoid disk space issues on the docker host
-            }
-        
-    } 
-
-}
 }
