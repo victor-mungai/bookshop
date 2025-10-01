@@ -61,5 +61,8 @@ This project demonstrates:
 
 ### 2️⃣ Local Development  
 ```bash
+#Clone repo
+git clone https://github.com/victor-mungai/bookshop.git
+
 # Run with Docker Compose
-docker-compose up --build
+docker compose up -d
