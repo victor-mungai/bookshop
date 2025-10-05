@@ -15,7 +15,7 @@ COPY --from=build-home /bookshop/public public
 COPY --from=build-home /bookshop/package*.json ./
 COPY --from=build-home /bookshop/node_modules ./node_modules
 EXPOSE 3000
-CMD ["npm","start"]
+CMD ["npm","start"] 
 
 
 ##This project did not have any static files to serve using nginx. Hence using node image to run the app.

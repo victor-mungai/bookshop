@@ -20,7 +20,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "frontend/**"
-                    expression { return env.CHANGE_ID == null && env.BUILD_NUMBER == '1' }
+                    changeset "app/**"
                 }
             }
             steps {
@@ -74,6 +74,7 @@ pipeline {
             when {
                 anyOf {
                     changeset "apache/**"
+                    changeset "api/**"
                     expression { return env.CHANGE_ID == null && env.BUILD_NUMBER == '1' }
                 }
             }

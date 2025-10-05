@@ -7,3 +7,4 @@ ENV MYSQL_DATABASE="bookshop"
 ADD db/sql_dump docker-entrypoint-initdb.d/db_backup.sql
 EXPOSE 3306
 
+ 

@@ -9,8 +9,10 @@ services:
     volumes:
      - bookshop-db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 1234  
+      MYSQL_ROOT_PASSWORD: /var/run/secrets/db_password
       MYSQL_DATABASE: bookshop
+    secrets:
+      - db_password
     networks:
      - app-network
 
@@ -59,6 +61,8 @@ volumes:
 secrets:
   git_pat:
     file: ./.git-token
+  db_password:
+    file: db-password.txt
 
 networks:
   app-network:
