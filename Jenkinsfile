@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        dockerRegistry = 'docker.io'
-        FRONTEND_IMAGE = "victormungai/sarabobo-frontend"
+        dockerRegistry = 'https://docker.io'
         PROXY_IMAGE = "victormungai/sarabobo-proxy"
         DB_IMAGE = "victormungai/sarabobo-db"
         APACHE_IMAGE = "victormungai/sarabobo-apache"
