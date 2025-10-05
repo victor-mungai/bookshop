@@ -87,7 +87,7 @@ pipeline {
                     }
                 }
             }
-        }
+        } 
 
         stage("Cleanup Unused Images") {
             steps {
