@@ -27,3 +27,8 @@ spec:
          limits:
            memory: "256Mi"
            cpu: "200m"
+       tolerations:
+        - key: "backend-node"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
