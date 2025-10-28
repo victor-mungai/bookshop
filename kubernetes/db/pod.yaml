@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+  labels:
+    deployment: db-deployment
+spec:
+ selector:
+    matchLabels:
+      app: db
+ replicas: 1
+ template:
+   metadata:
+      labels:
+        app: db
+   spec:
+     containers:
+      - name: db
+        image: 315071206125.dkr.ecr.us-east-1.amazonaws.com/bookshop/db:v1
+        ports:
+         - name: mysql
+           containerPort: 3306
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+         - mountPath: /var/lib/mysql
+           name: mysql-persistent-storage
+        env:
+         - name: MYSQL_ROOT_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: db-password-secret
+               key: password
+
+         - name: MYSQL_DATABASE
+           value: "bookshop"
+
+     volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
